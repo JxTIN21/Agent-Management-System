@@ -8,6 +8,11 @@ const path = require('path');
 // Load environment variables from .env file
 dotenv.config();
 
+app.use(cors({
+  origin: 'https://agent-management-system.netlify.app/',  // Replace after deploying frontend
+  credentials: true,
+}));
+
 // Connect to MongoDB database
 connectDB();
 
