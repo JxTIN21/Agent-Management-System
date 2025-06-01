@@ -8,6 +8,10 @@ const path = require('path');
 // Load environment variables from .env file
 dotenv.config();
 
+// Initialize express app FIRST
+const app = express();
+
+// Use cors before other middlewares or routes
 app.use(cors({
   origin: 'https://agent-management-system.netlify.app/',  // Replace after deploying frontend
   credentials: true,
@@ -15,9 +19,6 @@ app.use(cors({
 
 // Connect to MongoDB database
 connectDB();
-
-// Initialize express app
-const app = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
