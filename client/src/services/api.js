@@ -2,8 +2,10 @@
 
 import axios from 'axios';
 
+const API_BASE_URL = 'https://agent-management-system.onrender.com/api';
+
 const api = axios.create({
-  baseURL: '/api', // proxy in package.json will forward to backend
+  baseURL: API_BASE_URL,
 });
 
 // Automatically attach token if it exists
