@@ -11,30 +11,24 @@ dotenv.config();
 // Initialize express app FIRST
 const app = express();
 
-// Use cors before other middlewares or routes
-app.use(cors({
-  origin: 'https://agent-management-system.netlify.app/',  // Replace after deploying frontend
-  credentials: true,
-}));
+// CORS configuration for frontend
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL || 'https://agent-management-system.netlify.app'  // no trailing slash
+    : 'http://localhost:3000',
+  credentials: true, // Allow cookies and auth headers
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
 
-// Connect to MongoDB database
-connectDB();
+// Use CORS middleware once with the above options
+app.use(cors(corsOptions));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// CORS configuration for Netlify frontend
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL || 'https://your-app-name.netlify.app' // Your Netlify domain
-    : 'http://localhost:3000', // Local development frontend URL
-  credentials: true, // Allow cookies and authentication headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-// Apply CORS middleware with configuration
-app.use(cors(corsOptions));
+// Connect to MongoDB database
+connectDB();
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -61,8 +55,5 @@ const server = app.listen(PORT, () => {
 // Handle unhandled promise rejections gracefully
 process.on('unhandledRejection', (err, promise) => {
   console.error(`Unhandled Rejection: ${err.message}`);
-  // Close server gracefully before exiting
-  server.close(() => {
-    process.exit(1);
-  });
+  server.close(() => process.exit(1));
 });
