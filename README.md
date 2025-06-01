@@ -65,7 +65,7 @@ PROJECT/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/agent-management.git
+git clone https://github.com/JxTIN21/agent-management.git
 cd agent-management
 ```
 
